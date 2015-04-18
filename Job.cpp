@@ -130,6 +130,6 @@ String Job::timeToString(RTCTime t) {
   return String(s);
 }
 
-boolean Job::(uint8_t i) {
+boolean Job::isEnable(uint8_t i) {
   return schedules[i].enable;
 }

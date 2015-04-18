@@ -1616,7 +1616,7 @@ void dsts_ui_init(uint8_t x, String text) {
 }
 
 void drawTimeDateSetting(uint8_t x, char* str) {
-  myScreen.rectangle(0, 124, 320, 148, whiteColour);
+  myScreen.rectangle(0, 124, 319, 148, whiteColour);
   gText(x, 124, str, blackColour, 3);
 }
 
@@ -1665,10 +1665,11 @@ void initAIR() {
 
 void initLCD() {
   myScreen.begin();
-  myScreen.setOrientation(3);
+  myScreen.setOrientation(1);
   myScreen.setFontSize(myScreen.fontMax());
   myScreen.clear(blackColour);
   opening();
+  myScreen.calibrateTouch();
 }
 
 void deviceTimeInit() {
