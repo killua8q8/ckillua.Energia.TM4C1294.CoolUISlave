@@ -679,25 +679,25 @@ boolean childControl(roomStruct* room, childStruct child, uint8_t index) {
   long current = millis();
   childInfoButton.dDefine(&myScreen, g_infoCImage, xy[count][0], xy[count++][1], setItem(100, "INFO"));
   childInfoButton.enable();
-  onButton.dDefine(&myScreen, g_onImage, xy[count][0], xy[count++][1], setItem(100, "ON"));
-  onButton.enable();  
+  onButton.dDefine(&myScreen, g_onImage, xy[count][0], xy[count][1], setItem(100, "ON"));
+  onButton.enable(false);  
   offButton.dDefine(&myScreen, g_offImage, xy[count][0], xy[count++][1], setItem(100, "OFF"));
-  offButton.enable();  
+  offButton.enable(false);  
   removeButton.dDefine(&myScreen, g_removeImage, xy[count][0], xy[count++][1], setItem(100, "REMOVE"));
   removeButton.enable();  
   returnButton.dDefine(&myScreen, g_returnImage, xy[count][0], xy[count++][1], setItem(100, "RETURN"));
   returnButton.enable();
-  resetChildControlUI(tmp, celsius_c, 0);
+  resetChildControlUI(child, tmp, celsius_c, 0);
   
   while(1) {
     if (_idle) {
       while(_idle){delay(1);}
-      resetChildControlUI(tmp, celsius_c, 0);
+      resetChildControlUI(child, tmp, celsius_c, 0);
     }
     if (millis() - current > 60000) {
       tmp = getChildTemp(child);
       current = millis();
-      resetChildControlUI(tmp, celsius_c, 1);
+      resetChildControlUI(child, tmp, celsius_c, 1);
     }
     if (homeButton.isPressed()) {
       return HOME;
@@ -708,13 +708,15 @@ boolean childControl(roomStruct* room, childStruct child, uint8_t index) {
     if (childInfoButton.check(true)) {
       tmp = getChildTemp(child);
       celsius_c = !celsius_c;
-      resetChildControlUI(tmp, celsius_c, 1);
+      resetChildControlUI(child, tmp, celsius_c, 1);
     }
     if (onButton.check(true)) {
-      childCommand(child, "ON");
+      childCommand(child, "OFF");
+      resetChildControlUI(child, tmp, celsius_c, 1);
     }
     if (offButton.check(true)) {
-      childCommand(child, "OFF");
+      childCommand(child, "ON");
+      resetChildControlUI(child, tmp, celsius_c, 1);
     }
     if (removeButton.check(true)) {
       childCommand(child, "DEL");
@@ -724,16 +726,26 @@ boolean childControl(roomStruct* room, childStruct child, uint8_t index) {
   }
 }
 
-void resetChildControlUI(float tmp, boolean c, uint8_t type) {  // type: 0 - update all; 1 - update temp only
+void resetChildControlUI(childStruct child, float tmp, boolean c, uint8_t type) {  // type: 0 - update all; 1 - update temp only
   uint8_t x1 = childInfoButton.getX()+28, x2 = childInfoButton.getX()+44, y1 = childInfoButton.getY()+13, y2 = childInfoButton.getY()+36;
   int16_t t = ceil(3.3 * tmp * 100.0 / 1024.0);
   uint16_t textColor = myScreen.rgb(77, 132, 171);
+  childCommand(child, "STA");
+  uint8_t flag = rxPacket.upper;
+  
   if (type == 0) {
     uiBackground(true);
-    onButton.draw();
-    offButton.draw();
     removeButton.draw();
     returnButton.draw();
+  }
+  if (flag == 1) {
+    offButton.enable(false);
+    onButton.enable();
+    onButton.draw(); 
+  } else {
+    onButton.enable(false);
+    offButton.enable();
+    offButton.draw();
   }
   childInfoButton.draw();
   
