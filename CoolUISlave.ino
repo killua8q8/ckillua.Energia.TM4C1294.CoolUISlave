@@ -287,7 +287,11 @@ boolean jobConfig(roomStruct* room) {
       }      
     }
     if (addJobButton.check(true)) {
-      if (room->childSize > 0 && room->job.scheduleSize < MAXSCHEDULE && addJob(room, true, -1)) return HOME;
+      if (room->childSize > 0 && room->job.scheduleSize < MAXSCHEDULE) {
+        if (addJob(room, true, -1)) return HOME
+      } else {
+        return HOME;
+      }
       resetJobConfigUI(room, page, room->job.scheduleSize > 6);
     }
     if (nextButton.check(true)) {
@@ -548,7 +552,7 @@ void aj_init_once(roomStruct* room, childButton* children) {
   
   uint8_t xoff = (320 - room->childSize*64)/(room->childSize + 1);
   for (int i = 0; i < room->childSize; i++) {
-    children[i].define(&myScreen, room->childList[i].button.getIcon(), i+xoff, 48, room->childList[i].name);
+    children[i].define(&myScreen, room->childList[i].button.getIcon(), i*64+xoff, 48, room->childList[i].name);
     children[i].enable();
   }
   timeCheckButton.dDefine(&myScreen, g_uncheck16Image, 108, 144, setItem(201, "TC"));
