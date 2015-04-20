@@ -288,7 +288,7 @@ boolean jobConfig(roomStruct* room) {
     }
     if (addJobButton.check(true)) {
       if (room->childSize > 0 && room->job.scheduleSize < MAXSCHEDULE) {
-        if (addJob(room, true, -1)) return HOME
+        if (addJob(room, true, -1)) return HOME;
       } else {
         return HOME;
       }
