@@ -3,7 +3,7 @@
 
 #define HOME true
 #define RETURN false
-#define SENSOR PE_1
+#define SENSOR PB_4
 #define NEWFAN 0x01
 #define NEWVENT 0x02
 #define NEWBLIND 0x03
@@ -14,7 +14,7 @@
 #define TIMEMODE 1
 #define DATEMODE 2
 #define VREF 3.3
-#define STATUS PN_1  //LED1 indicating connection to MASTER
+#define STATUS PB_5  //LED1 indicating connection to MASTER
 
 extern const uint8_t g_logoImage[];
 extern const uint8_t g_room[];
